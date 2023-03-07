@@ -2,40 +2,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: weirdsplace-mc-wp02
-  namespace: weirdsplace-minecraft
+  name: minecraft-crew
+  namespace: minecraft-crew
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: weirdsplace-mc-wp02
+      app: minecraft-crew
   template:
     metadata:
       labels:
-        app: weirdsplace-mc-wp02
+        app: minecraft-crew
     spec:    
       volumes:
-      - name: weirdsplace-mc-wp02
+      - name: minecraft-crew
         persistentVolumeClaim:
-          claimName: weirdsplace-mc-wp02
+          claimName: minecraft-crew
       containers:
-      - name: weirdsplace-mc-wp02
-        image: ghcr.io/jwklijnsma/minecraft-wp02:main
+      - name: minecraft-crew
+        image: ghcr.io/jwklijnsma/minecraft-crew:main
         volumeMounts:
-          - name: weirdsplace-mc-wp02
+          - name: minecraft-crew
             mountPath: /home/alex/minecraft
         ports:
         - containerPort: 25565
           hostPort: 25565
-          name: weirdsplacemc03
+          name: minecraft-crew
           protocol: UDP
         - containerPort: 25565
           hostPort: 25565
-          name: weirdsplacemc02
+          name: minecraft-crew
           protocol: TCP
         - containerPort: 19132
           hostPort: 19132
-          name: weirdsplacewp0
+          name: minecraft-crew
           protocol: UDP
       dnsPolicy: "None"
       dnsConfig:
@@ -45,31 +45,31 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: weirdsplace-mc-wp02
-  namespace: weirdsplace-minecraft
+  name: minecraft-crew
+  namespace: minecraft-crew
 spec:
   ports:
-  - name: weirdsplacewp02
+  - name: minecraft-crew
     port: 25565
     protocol: UDP
     targetPort: 25565
-  - name: weirdsplacewp02
+  - name: minecraft-crew
     port: 25565
     protocol: TCP
     targetPort: 25565
-  - name: weirdsplacewp0
+  - name: minecraft-crew
     port: 19132
     protocol: UDP
     targetPort: 19132
   selector:
-    app: weirdsplace-mc-wp02
+    app: minecraft-crew
   type: 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: weirdsplace-mc-wp02
-  namespace: weirdsplace-minecraft
+  name: minecraft-crew
+  namespace: minecraft-crew-minecraft
 spec:
   accessModes:
     - ReadWriteOnce
