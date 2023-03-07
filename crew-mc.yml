@@ -1,0 +1,78 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weirdsplace-mc-wp02
+  namespace: weirdsplace-minecraft
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weirdsplace-mc-wp02
+  template:
+    metadata:
+      labels:
+        app: weirdsplace-mc-wp02
+    spec:    
+      volumes:
+      - name: weirdsplace-mc-wp02
+        persistentVolumeClaim:
+          claimName: weirdsplace-mc-wp02
+      containers:
+      - name: weirdsplace-mc-wp02
+        image: ghcr.io/jwklijnsma/minecraft-wp02:main
+        volumeMounts:
+          - name: weirdsplace-mc-wp02
+            mountPath: /home/alex/minecraft
+        ports:
+        - containerPort: 25565
+          hostPort: 25565
+          name: weirdsplacemc03
+          protocol: UDP
+        - containerPort: 25565
+          hostPort: 25565
+          name: weirdsplacemc02
+          protocol: TCP
+        - containerPort: 19132
+          hostPort: 19132
+          name: weirdsplacewp0
+          protocol: UDP
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 10.0.4.2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weirdsplace-mc-wp02
+  namespace: weirdsplace-minecraft
+spec:
+  ports:
+  - name: weirdsplacewp02
+    port: 25565
+    protocol: UDP
+    targetPort: 25565
+  - name: weirdsplacewp02
+    port: 25565
+    protocol: TCP
+    targetPort: 25565
+  - name: weirdsplacewp0
+    port: 19132
+    protocol: UDP
+    targetPort: 19132
+  selector:
+    app: weirdsplace-mc-wp02
+  type: 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: weirdsplace-mc-wp02
+  namespace: weirdsplace-minecraft
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
